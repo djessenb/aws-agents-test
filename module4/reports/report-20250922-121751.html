@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report - what cures cancer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0b0f14;
+      --fg: #e6edf3;
+      --muted: #9aa4af;
+      --card: #0f1720;
+      --accent: #4f85ff;
+      --code-bg: #0a0e14;
+      --border: #1e2a3a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg); color: var(--fg);
+    }
+    .container {
+      max-width: 880px; margin: 40px auto; padding: 24px; background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    h1, h2, h3 { line-height: 1.2; }
+    h1 { font-size: 28px; margin: 0 0 12px; }
+    .subtitle { color: var(--muted); margin-bottom: 24px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \
+      "Liberation Mono", "Courier New", monospace; }
+    pre { background: var(--code-bg); padding: 14px; border-radius: 8px; overflow: auto; border: 1px solid var(--border); }
+    code { background: var(--code-bg); padding: 2px 6px; border-radius: 6px; border: 1px solid var(--border); }
+    blockquote { margin: 0; border-left: 4px solid var(--accent); padding-left: 12px; color: var(--muted); }
+    hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .content img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); }
+    .mermaid { background: var(--code-bg); border-radius: 8px; border: 1px solid var(--border); padding: 12px; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({ startOnLoad: true, theme: 'dark' });</script>
+  <script>
+    const REPORT_TITLE = "Report - what cures cancer";
+    const MARKDOWN = "Report: What Cures Cancer\n\nBased on information from the National Cancer Institute (NCI), there is no single cure for cancer. Instead, cancer treatment is a complex and multifaceted approach that depends on the specific type and stage of cancer.\n\nKey points about cancer treatment:\n\n1. Multiple treatment methods: Cancer is typically treated using a combination of approaches, including surgery, chemotherapy, radiation therapy, immunotherapy, and targeted therapies.\n\n2. Personalized medicine: Treatment plans are increasingly tailored to an individual's genetic profile and the specific characteristics of their cancer.\n\n3. Ongoing research: Clinical trials and continuous research efforts are advancing cancer treatment options.\n\n4. Professional guidance: Consultation with healthcare professionals is crucial for developing up-to-date and personalized treatment plans.\n\nIt's important to note that while there is no universal cure, many cancers can be effectively treated, especially when caught early. The field of oncology is rapidly evolving, with new therapies and approaches being developed regularly.\n\nPatients are encouraged to work closely with their healthcare team to determine the best treatment approach for their specific situation. Additionally, participating in clinical trials may provide access to cutting-edge treatments and contribute to the advancement of cancer research.\n\nIn conclusion, while a single cure for all cancers does not exist, modern medicine offers a range of effective treatments that continue to improve patient outcomes.\n\n(Source: National Cancer Institute, part of the National Institutes of Health)\n";
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('title').textContent = REPORT_TITLE;
+      const html = marked.parse(MARKDOWN, { breaks: true, mangle: false, headerIds: true });
+      // Convert fenced ```mermaid blocks into <pre class="mermaid"> for Mermaid to pick up
+      const converted = html.replace(/<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/g, (m, g1) => `\n<div class="mermaid">${g1}
+</div>\n`);
+      document.getElementById('content').innerHTML = converted;
+    });
+  </script>
+  <meta name="robots" content="noindex" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#0b0f14" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="referrer" content="no-referrer" />
+  <meta charset="utf-8" />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="cache-control" content="no-cache" />
+  <meta http-equiv="expires" content="0" />
+  <meta http-equiv="pragma" content="no-cache" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="apple-mobile-web-app-title" content="Report" />
+  <meta name="application-name" content="Report" />
+  <meta name="msapplication-TileColor" content="#0b0f14" />
+  <meta name="msapplication-TileImage" content="" />
+  <meta name="msapplication-config" content="" />
+</head>
+<body>
+  <div class="container">
+    <h1 id="title"></h1>
+    <div class="subtitle">Generated by Agentic Workflow</div>
+    <div id="content" class="content"></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+from typing import Any
+from strands.types.tools import ToolUse, ToolResult
+import requests
+from bs4 import BeautifulSoup
+import random
+
+TOOL_SPEC = {
+    "name": "destination_content_generator",
+    "description": "Generates content based on a destination, including an extensive description and related public images.",
+    "inputSchema": {
+        "json": {
+            "type": "object",
+            "properties": {
+                "destination": {
+                    "type": "string",
+                    "description": "The name of the destination to generate content for"
+                }
+            },
+            "required": ["destination"]
+        }
+    }
+}
+
+def destination_content_generator(tool_use: ToolUse, **kwargs: Any) -> ToolResult:
+    """
+    Generates content based on a destination, including an extensive description (max 120 words) and related public images.
+    
+    Args:
+        tool_use (ToolUse): The tool use object containing the input parameters.
+    
+    Returns:
+        ToolResult: A dictionary containing the generated content and status.
+    """
+    tool_use_id = tool_use["toolUseId"]
+    destination = tool_use["input"]["destination"]
+    
+    # Generate description
+    description = generate_description(destination)
+    
+    # Find related images
+    images = find_related_images(destination)
+    
+    result = f"Description of {destination}:\n\n{description}\n\nRelated Images:\n"
+    for img in images[:3]:  # Limit to 3 images
+        result += f"{img}\n"
+    
+    return {
+        "toolUseId": tool_use_id,
+        "status": "success",
+        "content": [{"text": result}]
+    }
+
+def generate_description(destination: str) -> str:
+    """Generate a description of the destination using a search engine."""
+    url = f"https://www.google.com/search?q={destination}+travel+guide"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    paragraphs = soup.find_all("p")
+    
+    description = ""
+    word_count = 0
+    for p in paragraphs:
+        text = p.get_text().strip()
+        words = text.split()
+        if word_count + len(words) <= 120:
+            description += text + " "
+            word_count += len(words)
+        else:
+            remaining_words = 120 - word_count
+            description += " ".join(words[:remaining_words])
+            break
+    
+    return description.strip()
+
+def find_related_images(destination: str) -> list:
+    """Find related images for the destination using a search engine."""
+    url = f"https://www.google.com/search?q={destination}&tbm=isch"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    img_tags = soup.find_all("img")
+    
+    images = []
+    for img in img_tags[1:]:  # Skip the first image (usually Google logo)
+        src = img.get("src")
+        if src and src.startswith("http"):
+            images.append(src)
+    
+    return random.sample(images, min(3, len(images)))  # Return up to 3 random images

@@ -13,3 +13,5 @@ strands-agents-tools[mem0_memory]
 streamlit
 tqdm
 uv
+botocore
+awscli
